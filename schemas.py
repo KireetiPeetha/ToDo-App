@@ -7,10 +7,9 @@ class ToDoCreate(BaseModel):
     description: Optional[str] = None
 
 class ToDoResponse(BaseModel):
-    id: UUID
     title: str
     description: Optional[str] = None
     completed: bool
-
+    id: UUID
     model_config = ConfigDict(from_attributes=True)
  
