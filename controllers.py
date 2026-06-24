@@ -4,6 +4,7 @@ from services import create_todo_service
 from services import get_all_todos_service
 from services import get_todo_service
 from services import update_todo_service
+from services import delete_todo_service
 
 
 def create_todo_controller(todo_data: ToDoCreate):
@@ -17,3 +18,6 @@ def get_todo_controller(todo_id: UUID):
 
 def update_todo_controller(todo_id: UUID, todo_data: ToDoUpdate):
     return update_todo_service(todo_id, todo_data)
+
+def delete_todo_controller(todo_id: UUID):
+    return delete_todo_service(todo_id)

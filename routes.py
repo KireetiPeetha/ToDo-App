@@ -4,6 +4,7 @@ from controllers import create_todo_controller
 from controllers import get_all_todos_controller
 from controllers import get_todo_controller
 from controllers import update_todo_controller
+from controllers import delete_todo_controller
 from schemas import ToDoCreate, ToDoResponse, ToDoUpdate
 
 
@@ -24,3 +25,7 @@ def get_todo(todo_id: UUID):
 @router.patch("/update_todo/{todo_id}", response_model = ToDoResponse)
 def update_todo(todo_id: UUID, todo_data: ToDoUpdate):
     return update_todo_controller(todo_id, todo_data)
+
+@router.delete("/delete_todo/{todo_id}")
+def delete_todo(todo_id: UUID):
+    return delete_todo_controller(todo_id)

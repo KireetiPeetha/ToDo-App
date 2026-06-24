@@ -58,3 +58,17 @@ def update_todo_service(todo_id: UUID, todo_data: ToDoUpdate):
             raise HTTPException(status_code = 404, detail = "ToDo not found")
     finally:
         db.close()
+
+
+def delete_todo_service(todo_id: UUID):
+    db = SessionLocal()
+    try:
+        todo = db.query(ToDo).filter(ToDo.id == todo_id).first()
+        if todo:
+            db.delete(todo)
+            db.commit()
+            return {"message": "ToDo deleted successfully"}
+        else:
+            raise HTTPException(status_code = 404, detail = "ToDo not found")
+    finally:
+        db.close()
