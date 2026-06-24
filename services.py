@@ -15,3 +15,12 @@ def create_todo_service(todo_data: ToDoCreate):
         return new_todo
     finally:
         db.close()
+
+
+def get_all_todos_service():
+    db = SessionLocal()
+    try:
+        todos = db.query(ToDo).all()
+        return todos
+    finally:
+        db.close()
