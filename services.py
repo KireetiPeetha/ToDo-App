@@ -1,7 +1,7 @@
 from database import SessionLocal
 from uuid import UUID
 from models import ToDo
-from schemas import ToDoCreate
+from schemas import ToDoCreate, ToDoUpdate
 from fastapi import HTTPException
 
 def create_todo_service(todo_data: ToDoCreate):
@@ -33,6 +33,26 @@ def get_todo_service(todo_id: UUID):
     try:
         todo = db.query(ToDo).filter(ToDo.id == todo_id).first()
         if todo:
+            return todo
+        else:
+            raise HTTPException(status_code = 404, detail = "ToDo not found")
+    finally:
+        db.close()
+
+
+def update_todo_service(todo_id: UUID, todo_data: ToDoUpdate):
+    db = SessionLocal()
+    try:
+        todo = db.query(ToDo).filter(ToDo.id == todo_id).first()
+        if todo:
+            if todo_data.title is not None:
+                todo.title = todo_data.title
+            if todo_data.description is not None:
+                todo.description = todo_data.description
+            if todo_data.completed is not None:
+                todo.completed = todo_data.completed
+            db.commit()
+            db.refresh(todo)
             return todo
         else:
             raise HTTPException(status_code = 404, detail = "ToDo not found")
