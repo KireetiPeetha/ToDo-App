@@ -1,6 +1,8 @@
 from fastapi import APIRouter
+from uuid import UUID
 from controllers import create_todo_controller
 from controllers import get_all_todos_controller
+from controllers import get_todo_controller
 from schemas import ToDoCreate, ToDoResponse
 
 
@@ -13,3 +15,7 @@ def create_todo(todo_data: ToDoCreate):
 @router.get("/get_all_todos", response_model = list[ToDoResponse])
 def get_all_todos():
     return get_all_todos_controller()
+
+@router.get("/get_todo/{todo_id}", response_model = ToDoResponse)
+def get_todo(todo_id: UUID):
+    return get_todo_controller(todo_id)
