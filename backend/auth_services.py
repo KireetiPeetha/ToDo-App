@@ -7,6 +7,8 @@ from schemas import UserRegister, UserLogin, Token
 from fastapi import HTTPException
 import os
 from dotenv import load_dotenv
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends
 
 load_dotenv()
 
@@ -115,3 +117,9 @@ def refresh_access_token(refresh_token: str):
         }
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+    
+security = HTTPBearer()
+
+def get_current_user_dependency(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    return get_current_user(token)

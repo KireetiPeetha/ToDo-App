@@ -4,12 +4,13 @@ from models import ToDo
 from schemas import ToDoCreate, ToDoUpdate
 from fastapi import HTTPException
 
-def create_todo_service(todo_data: ToDoCreate):
+def create_todo_service(todo_data: ToDoCreate, current_user):
     db = SessionLocal()
     try:
         new_todo = ToDo(
-            title = todo_data.title,
-            description = todo_data.description
+            title=todo_data.title,
+            description=todo_data.description,
+            user_id=current_user.id
         )
         db.add(new_todo)
         db.commit()
@@ -18,32 +19,29 @@ def create_todo_service(todo_data: ToDoCreate):
     finally:
         db.close()
 
-
-def get_all_todos_service():
+def get_all_todos_service(current_user):
     db = SessionLocal()
     try:
-        todos = db.query(ToDo).all()
+        todos = db.query(ToDo).filter(ToDo.user_id == current_user.id).all()
         return todos
     finally:
         db.close()
 
-
-def get_todo_service(todo_id: UUID):
+def get_todo_service(todo_id: UUID, current_user):
     db = SessionLocal()
     try:
-        todo = db.query(ToDo).filter(ToDo.id == todo_id).first()
+        todo = db.query(ToDo).filter(ToDo.id == todo_id, ToDo.user_id == current_user.id).first()
         if todo:
             return todo
         else:
-            raise HTTPException(status_code = 404, detail = "ToDo not found")
+            raise HTTPException(status_code=404, detail="ToDo not found")
     finally:
         db.close()
 
-
-def update_todo_service(todo_id: UUID, todo_data: ToDoUpdate):
+def update_todo_service(todo_id: UUID, todo_data: ToDoUpdate, current_user):
     db = SessionLocal()
     try:
-        todo = db.query(ToDo).filter(ToDo.id == todo_id).first()
+        todo = db.query(ToDo).filter(ToDo.id == todo_id, ToDo.user_id == current_user.id).first()
         if todo:
             if todo_data.title is not None:
                 todo.title = todo_data.title
@@ -55,20 +53,19 @@ def update_todo_service(todo_id: UUID, todo_data: ToDoUpdate):
             db.refresh(todo)
             return todo
         else:
-            raise HTTPException(status_code = 404, detail = "ToDo not found")
+            raise HTTPException(status_code=404, detail="ToDo not found")
     finally:
         db.close()
 
-
-def delete_todo_service(todo_id: UUID):
+def delete_todo_service(todo_id: UUID, current_user):
     db = SessionLocal()
     try:
-        todo = db.query(ToDo).filter(ToDo.id == todo_id).first()
+        todo = db.query(ToDo).filter(ToDo.id == todo_id, ToDo.user_id == current_user.id).first()
         if todo:
             db.delete(todo)
             db.commit()
             return {"message": "ToDo deleted successfully"}
         else:
-            raise HTTPException(status_code = 404, detail = "ToDo not found")
+            raise HTTPException(status_code=404, detail="ToDo not found")
     finally:
         db.close()
