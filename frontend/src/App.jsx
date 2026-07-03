@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 function App() {
     const [page, setPage] = useState(() => {
@@ -38,7 +39,7 @@ function App() {
         return <Register onRegisterSuccess={handleRegisterSuccess} />;
     }
 
-    return <div>Dashboard coming soon</div>;
+    return <Dashboard onLogout={handleLogout} />;
 }
 
 export default App;
