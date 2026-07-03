@@ -1,26 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+    const [page, setPage] = useState(() => {
+        const token = localStorage.getItem("access_token");
+        return token ? "dashboard" : "login";
+    });
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/get_all_todos")
-      .then(response => response.json())
-      .then(data => setTodos(data));
-  }, []);
+    function handleLoginSuccess(destination) {
+        if (destination === "register") {
+            setPage("register");
+        } else {
+            setPage("dashboard");
+        }
+    }
 
-  return (
-    <div>
-      <h1>ToDo App</h1>
-      <ul>
-        {todos.map(todo => (
-          <li key={todo.id}>
-            {todo.title}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    function handleRegisterSuccess(destination) {
+        if (destination === "login") {
+            setPage("login");
+        } else {
+            setPage("dashboard");
+        }
+    }
+
+    function handleLogout() {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        setPage("login");
+    }
+
+    if (page === "login") {
+        return <Login onLoginSuccess={handleLoginSuccess} />;
+    }
+
+    if (page === "register") {
+        return <Register onRegisterSuccess={handleRegisterSuccess} />;
+    }
+
+    return <div>Dashboard coming soon</div>;
 }
 
 export default App;
