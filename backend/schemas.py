@@ -61,4 +61,19 @@ class UserResponse(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class CategoryCreate(BaseModel):
+    name: str
+    color: Optional[str] = "#0ea5e9"
+
+class CategoryResponse(BaseModel):
+    id: UUID
+    name: str
+    color: str
+    user_id: UUID
+    model_config = ConfigDict(from_attributes=True)
+
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = None
+    color: Optional[str] = None
  

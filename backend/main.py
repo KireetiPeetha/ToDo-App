@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from routes import router
 from fastapi.middleware.cors import CORSMiddleware
 from auth_routes import router as auth_router
+from category_routes import router as category_router
 
 origins = [
     "http://localhost:5173",
@@ -18,3 +19,4 @@ app.add_middleware(
 )
 app.include_router(router)
 app.include_router(auth_router)
+app.include_router(category_router)
